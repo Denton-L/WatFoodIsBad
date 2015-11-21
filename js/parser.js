@@ -34,6 +34,7 @@ parseInfractions(file) {
 				complete: function(results, file) {
 						delete inspectionsDict;
 						notifyInfractionDone();
+				}
 		});
 }
 
