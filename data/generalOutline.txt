@@ -32,10 +32,9 @@ PARSE INFRACTIONS LAST:
 - push each infraction into the array of its corresponding inspection object 
 
 var infraction = {
-	description : string,
-	infractionType : string,
-	letterCode : string,
-	inspectionID : string
+	description : category_code,
+	infractionType : INFRACTION_TYPE,
+	inspectionID : INSPECTION_ID
 }
 
 inspections[infraction['inspectionID']][infractions].push(infraction);
