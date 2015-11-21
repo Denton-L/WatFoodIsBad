@@ -77,6 +77,7 @@
             <h1>Click the button to see map</h1>
             <h3>Free Bootstrap Themes &amp; Templates</h3>
             <br>
+            <div id="mapButton" style = "display:none;"></div>
             <input type="file" id="fileInput1" >
     </header>
     
@@ -113,6 +114,7 @@
     $("#fileInput1").change(function () {
         var selectedFile = document.getElementById('fileInput1').files[0];
         console.log(selectedFile);
+        $("#mapButton").click();
     });
         
     $(document).on('click', '#mapButton', function () {
