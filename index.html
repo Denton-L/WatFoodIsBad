@@ -162,7 +162,7 @@
                
     });
     $("#fileInput2").change(function () {
-        var selectedFile = document.getElementById('fileInput1').files[0];
+        var selectedFile = document.getElementById('fileInput2').files[0];
         console.log(selectedFile);
         $("#textB").fadeOut(200);
         parseInspections(selectedFile, function() {
@@ -172,7 +172,7 @@
         });
     });
     $("#fileInput3").change(function () {
-        var selectedFile = document.getElementById('fileInput1').files[0];
+        var selectedFile = document.getElementById('fileInput3').files[0];
         console.log(selectedFile);
         parseInfractions(selectedFile, function() {
             $("#mapButton").click();

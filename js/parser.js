@@ -1,17 +1,15 @@
 var locationsDict = {};
 var inspectionsDict = {};
-var notifyLocationsDone;
-var notifyInspectionsDone;
-var notifyInfractionsDone;
 
 function parseLocations(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
-				chunk: locationChunk,
+				chunk: function(results, parser) {
+						locationChunk(results.data, parser);
+				},
 				complete: function(results, file) {
-                    console.log("yolo1");
-						cb();
+					cb();
 				}
 		});
 }
@@ -20,9 +18,10 @@ function parseInspections(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
-				chunk: inspectionChunk,
+				chunk: function(results, parser) {
+						inspectionChunk(results.data, parser);
+				},
 				complete: function(results, file) {
-					console.log("yolo2");	
                     cb();
 				}
 		});
@@ -32,11 +31,12 @@ function parseInfractions(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
-				chunk: infractionChunk,
+				chunk: function(results, parser) {
+						infractionChunk(results.data, parser);
+				},
 				complete: function(results, file) {
-						delete inspectionsDict;
-                    console.log("yolo3");
-						cb();
+					console.log(locationsDict);
+					cb();
 				}
 		});
 }
@@ -55,10 +55,11 @@ function locationChunk(results, parser) {
 }
 
 function inspectionChunk(results, parser) {
+		console.log(results);
 		for (var i = 0; i < results.length; i++) {
 				locationsDict[results[i].FACILITYID].inspections.push(inspectionsDict[results[i].INSPECTION_ID] = {
-						date: INSPECTION_DATE,
-						requireInspection: REQUIRE_INSPECTION,
+						date: results[i].INSPECTION_DATE,
+						requireInspection: results[i].REQUIRE_INSPECTION,
 						infractions: []
 				});
 		}
@@ -67,8 +68,8 @@ function inspectionChunk(results, parser) {
 function infractionChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
 				inspectionsDict[results[i].INSPECTION_ID].infractions.push({
-						description: category_code,
-						infractionType: INFRACTION_TYPE
+						description: results[i].category_code,
+						infractionType: results[i].INFRACTION_TYPE
 				});
 		}
 }
