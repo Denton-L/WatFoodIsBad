@@ -1,0 +1,50 @@
+/*
+PARSE FACILITIES FIRST: 
+- dict of k-v pairs of facility_id : facility object
+
+var facilities = {
+	"FACILITY_ID" : {
+		name : BUSINESS_NAME,
+		address : ADDR,
+		city : CITY,
+		numCritical : #,
+		numNonCritical : #,
+		inspections : []
+	}
+}
+
+PARSE INSPECTIONS NEXT:
+- dict of k-v pairs of inspection_id : inspection object
+
+var inspections = {
+	"INSPECTION_ID" : {
+		date : INSPECTION_DATE,			
+		requireReinspection : REQUIRE_REINSPECTION,
+		facilityID : FACILITYID,
+		infractions : []		
+	}
+}
+
+var inspectionIDs = [];
+inspectionIDs.push("INSPECTION_ID"); // for later iteration
+
+PARSE INFRACTIONS LAST:
+- push each infraction into the array of its corresponding inspection object 
+
+var infraction = {
+	description : string,
+	infractionType : string,
+	letterCode : string,
+	inspectionID : string
+}
+
+inspections[infraction['inspectionID']][infractions].push(infraction);
+
+
+- push each inspection object onto its corresponding facility object
+
+for i in inspectionIDs :
+inspection = inspectionIDs[i];
+facilities[inspection["facilityID"]]["inspections"].push(inspection);
+
+*/
