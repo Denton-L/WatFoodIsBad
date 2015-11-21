@@ -47,8 +47,6 @@ function locationChunk(results, parser) {
 						name: results[i].BUSINESS_NAME,
 						address: results[i].ADDR,
 						city: results[i].CITY,
-						numCritical: 0,
-						numNonCritical: 0,
 						inspections: []
 				};
 		}
