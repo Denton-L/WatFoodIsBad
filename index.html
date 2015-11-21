@@ -32,6 +32,41 @@
       .stations, .stations svg {
         position: absolute;
       }
+
+      svg rect {
+        -ms-transform: rotate(0deg); /* IE 9 */
+        -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+        transform: rotate(0deg);
+
+        -ms-transform-origin: 50% 50%;
+        -webkit-transform-origin: 50% 50%;
+        transform: 50% 50%;
+      }
+
+      svg rect:hover {
+        -ms-transform: rotate(90deg); /* IE 9 */
+        -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
+        transform: rotate(90deg);
+      }
+
+      h2 {
+        color: black;
+      }
+
+      #infobox span {
+        font-size: 24px;
+        float: right;
+      }
+
+      #infobox {
+        display:none;
+        opacity: 0.6;
+        position: absolute;
+        bottom: 0px;
+        height: 50%;
+        background-color: white;
+        padding: 20px;
+      }
     </style>
 
 
@@ -128,6 +163,10 @@
             <div id="gMap"></div>
         </section>
     </header>
+
+    <header id="infobox">
+        <span id="close">x</span>
+    </header>
     
      <!-- jQuery -->
     <script src="js/jquery.js"></script>
@@ -142,6 +181,20 @@
 
     <!-- Custom Theme JavaScript -->
     <script>
+    function toggleInfo () {
+        if ($("#infobox").css("display") != "block") {
+            $("#infobox").css("display", "block");
+        } else {
+            $("#infobox").css("display", "none");
+        }
+    }
+
+    $("#close").on("click", function (e) {
+        e.preventDefault();
+        $("#infobox div").remove();
+        toggleInfo();
+    })
+
     // Closes the sidebar menu
     $("#menu-close").click(function(e) {
         e.preventDefault();
@@ -221,12 +274,12 @@
     var map;
 
     var styleArray = [
-        /*{
+        {
             featureType: "all",
             stylers: [
                 { saturation: -80 }
             ]
-        },*/{
+        },{
             featureType: "road.arterial",
             elementType: "geometry",
             stylers: [
@@ -245,6 +298,7 @@
     var sampleData = [
         {
             name: "Campus Pizza",
+            rank: 1,
             loc: {
                 lat: "43.42",
                 lng: "-80.42"
@@ -253,6 +307,7 @@
         },
         {
             name: "Tim Hortons",
+            rank: 2,
             loc: {
                 lat: "43.405",
                 lng: "-80.41"
@@ -272,7 +327,7 @@
         var overlay = new google.maps.OverlayView();
 
         overlay.onAdd = function () {
-            var layer = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "stations");
+            var layer = d3.select(this.getPanes().overlayMouseTarget).append("div").attr("class", "stations");
 
             overlay.draw = function() {
                 var projection = this.getProjection(), padding = 12;
@@ -285,15 +340,27 @@
 
                 // Add a circle.
                 marker.append("svg:rect")
+                      .attr("id", function (d) {
+                        return "rest" + d.rank;
+                      })
                       .attr("width", 25)
                       .attr("height", 25)
                       .attr("rx", 3)
                       .attr("ry", 3)
+                      .attr("z-index", 10000000000)
                       .attr("style", function (d) {
                           console.log(d);
                           var colour = 255.0 * d.rating;
                           console.log(colour);
-                          return "fill: rgb(255, "+parseInt(colour)+", "+parseInt(colour)+");";
+                          return "fill: rgb(255, "+parseInt(colour)+", "+parseInt(colour)+"); stroke: grey; stroke-width: 2";
+                      })
+                      .on("click", function (d) {
+                          console.log("Clicked.");
+                          $("#infobox div").remove();
+                          $("#infobox").append("<div><h2>Name: "+d.name+"<br>Rank: "+d.rank+"</h2></div>");
+                          if ($("#infobox").css("display") != "block") {
+                              toggleInfo();
+                          }
                       })
 
                 // Add a label.
