@@ -20,7 +20,8 @@
     <!-- Custom Fonts -->
     <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-
+    <script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -67,8 +68,7 @@
             <h1>Click the button to see map</h1>
             <h3>Free Bootstrap Themes &amp; Templates</h3>
             <br>
-            <a  id="mapButton" class="btn btn-dark btn-lg">Find Out More</a>
-        </div>
+            <input type="file" id="fileInput1" >
     </header>
     
     
@@ -97,6 +97,11 @@
     $("#menu-close").click(function(e) {
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
+    });
+    
+    $("#fileInput1").change(function () {
+        var selectedFile = document.getElementById('fileInput1').files[0];
+        console.log(selectedFile);
     });
         
     $(document).on('click', '#mapButton', function () {
