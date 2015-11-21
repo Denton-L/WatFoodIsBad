@@ -28,6 +28,10 @@
     <style type="text/css">
       /*html, body { height: 100%; margin: 0; padding: 0; }*/
       #gMap { height: 100%; }
+
+      .stations, .stations svg {
+        position: absolute;
+      }
     </style>
 
 
@@ -217,12 +221,12 @@
     var map;
 
     var styleArray = [
-        {
+        /*{
             featureType: "all",
             stylers: [
                 { saturation: -80 }
             ]
-        },{
+        },*/{
             featureType: "road.arterial",
             elementType: "geometry",
             stylers: [
@@ -238,6 +242,25 @@
         }
     ];
 
+    var sampleData = [
+        {
+            name: "Campus Pizza",
+            loc: {
+                lat: "43.42",
+                lng: "-80.42"
+            },
+            rating: 0.8
+        },
+        {
+            name: "Tim Hortons",
+            loc: {
+                lat: "43.405",
+                lng: "-80.41"
+            },
+            rating: 0.5
+        }
+    ]
+
     function initMap () {
         map = new google.maps.Map(document.getElementById("gMap"), {
             center: {lat: 43.425, lng: -80.42},
@@ -252,9 +275,9 @@
             var layer = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "stations");
 
             overlay.draw = function() {
-                var projection = this.getProjection(), padding = 10;
+                var projection = this.getProjection(), padding = 12;
                 var marker = layer.selectAll("svg")
-                                  .data(d3.entries(data))
+                                  .data(sampleData)
                                   .each(transform) // update existing markers
                                   .enter().append("svg:svg")
                                   .each(transform)
@@ -262,23 +285,33 @@
 
                 // Add a circle.
                 marker.append("svg:rect")
-                      .attr("width", 10)
-                      .attr("height", 10)
-                      .attr("style", "fill: rgb(128, 128, 128)");
+                      .attr("width", 25)
+                      .attr("height", 25)
+                      .attr("rx", 3)
+                      .attr("ry", 3)
+                      .attr("style", function (d) {
+                          console.log(d);
+                          var colour = 255.0 * d.rating;
+                          console.log(colour);
+                          return "fill: rgb(255, "+parseInt(colour)+", "+parseInt(colour)+");";
+                      })
 
                 // Add a label.
                 marker.append("svg:text")
-                      .attr("x", padding + 7)
+                      .attr("x", padding + 15)
                       .attr("y", padding)
                       .attr("dy", ".31em")
-                      .text(function(d) { return d.key; });
+                      .text(function(d) { return d.name; });
 
                 function transform(d) {
-                    d = new google.maps.LatLng(d.value[1], d.value[0]);
+                    console.log(d);
+                    d = new google.maps.LatLng(d.loc.lat, d.loc.lng);
+                    console.log(d);
                     d = projection.fromLatLngToDivPixel(d);
+                    console.log(d);
                     return d3.select(this)
-                             .style("left", (d.x - padding) + "px")
-                             .style("top", (d.y - padding) + "px");
+                             .style("left", d.x + "px")
+                             .style("top", d.y + "px");
                 }
             }
         }
