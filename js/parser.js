@@ -9,7 +9,7 @@ function parseLocations(file, cb) {
 						locationChunk(results.data, parser);
 				},
 				complete: function(results, file) {
-					cb();
+						cb();
 				}
 		});
 }
@@ -22,7 +22,7 @@ function parseInspections(file, cb) {
 						inspectionChunk(results.data, parser);
 				},
 				complete: function(results, file) {
-                    cb();
+                   		cb();
 				}
 		});
 }
@@ -35,8 +35,8 @@ function parseInfractions(file, cb) {
 						infractionChunk(results.data, parser);
 				},
 				complete: function(results, file) {
-					console.log(locationsDict);
-					cb();
+						delete inspectionDict;
+						cb();
 				}
 		});
 }
@@ -55,8 +55,9 @@ function locationChunk(results, parser) {
 }
 
 function inspectionChunk(results, parser) {
-		console.log(results);
 		for (var i = 0; i < results.length; i++) {
+				if (locationsDict[results[i].FACILITYID] === undefined)
+						continue;
 				locationsDict[results[i].FACILITYID].inspections.push(inspectionsDict[results[i].INSPECTION_ID] = {
 						date: results[i].INSPECTION_DATE,
 						requireInspection: results[i].REQUIRE_INSPECTION,
@@ -67,6 +68,8 @@ function inspectionChunk(results, parser) {
 
 function infractionChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
+				if (inspectionsDict[results[i].FACILITYID] === undefined)
+						continue;
 				inspectionsDict[results[i].INSPECTION_ID].infractions.push({
 						description: results[i].category_code,
 						infractionType: results[i].INFRACTION_TYPE
