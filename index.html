@@ -58,6 +58,10 @@
         float: right;
       }
 
+      #infobox span:hover {
+        cursor: pointer;
+      }
+
       #infobox {
         display:none;
         opacity: 0.6;
@@ -283,8 +287,8 @@
             featureType: "road.arterial",
             elementType: "geometry",
             stylers: [
-                { hue: "#00ffee" },
-                { saturation: 50 }
+                { color: "#0000ff" },
+                { saturation: -55 }
             ]
         },{
             featureType: "poi",
@@ -298,7 +302,7 @@
     var sampleData = [
         {
             name: "Campus Pizza",
-            rank: 1,
+            rank: 2,
             loc: {
                 lat: "43.42",
                 lng: "-80.42"
@@ -307,13 +311,40 @@
         },
         {
             name: "Tim Hortons",
-            rank: 2,
+            rank: 5,
             loc: {
                 lat: "43.405",
                 lng: "-80.41"
             },
             rating: 0.5
-        }
+        },
+        {
+            name: "Panini House",
+            rank: 1,
+            loc: {
+                lat: "43.4015",
+                lng: "-80.425"
+            },
+            rating: 0.9
+        },
+        {
+            name: "Subway",
+            rank: 3,
+            loc: {
+                lat: "43.39",
+                lng: "-80.42"
+            },
+            rating: 0.75
+        },
+        {
+            name: "V1 Caf",
+            rank: 4,
+            loc: {
+                lat: "43.40",
+                lng: "-80.43"
+            },
+            rating: 0.69
+        },
     ]
 
     function initMap () {
@@ -350,7 +381,7 @@
                       .attr("z-index", 10000000000)
                       .attr("style", function (d) {
                           console.log(d);
-                          var colour = 255.0 * d.rating;
+                          var colour = 255.0 * d.rating - 50.0;
                           console.log(colour);
                           return "fill: rgb(255, "+parseInt(colour)+", "+parseInt(colour)+"); stroke: grey; stroke-width: 2";
                       })
