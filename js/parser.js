@@ -66,7 +66,7 @@ function inspectionChunk(results, parser) {
 
 function infractionChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
-				if (inspectionsDict[results[i].FACILITYID] === undefined)
+				if (inspectionsDict[results[i].INSPECTION_ID] === undefined)
 						continue;
 				inspectionsDict[results[i].INSPECTION_ID].infractions.push({
 						description: results[i].category_code,
