@@ -4,41 +4,44 @@ var notifyLocationsDone;
 var notifyInspectionsDone;
 var notifyInfractionsDone;
 
-parseLocations(file) {
+function parseLocations(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
 				chunk: locationChunk,
 				complete: function(results, file) {
-						notifyLocationsDone();
+                    console.log("yolo1");
+						cb();
 				}
 		});
 }
 
-parseInspections(file) {
+function parseInspections(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
 				chunk: inspectionChunk,
 				complete: function(results, file) {
-						notifyInspectionsDone();
+					console.log("yolo2");	
+                    cb();
 				}
 		});
 }
 
-parseInfractions(file) {
+function parseInfractions(file, cb) {
 		Papa.parse(file, {
 				header: true,
 				worker: true,
 				chunk: infractionChunk,
 				complete: function(results, file) {
 						delete inspectionsDict;
-						notifyInfractionDone();
+                    console.log("yolo3");
+						cb();
 				}
 		});
 }
 
-locationChunk(results, parser) {
+function locationChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
 				locationsDict[results[i].FACILITYID] = {
 						name: results[i].BUSINESS_NAME,
@@ -51,7 +54,7 @@ locationChunk(results, parser) {
 		}
 }
 
-inspectionChunk(results, parser) {
+function inspectionChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
 				locationsDict[results[i].FACILITYID].inspections.push(inspectionsDict[results[i].INSPECTION_ID] = {
 						date: INSPECTION_DATE,
@@ -61,7 +64,7 @@ inspectionChunk(results, parser) {
 		}
 }
 
-infractionChunk(results, parser) {
+function infractionChunk(results, parser) {
 		for (var i = 0; i < results.length; i++) {
 				inspectionsDict[results[i].INSPECTION_ID].infractions.push({
 						description: category_code,

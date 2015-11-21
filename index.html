@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -128,6 +128,8 @@
     
      <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/papaparse.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
@@ -142,14 +144,20 @@
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
+        
+    
     
     $("#fileInput1").change(function () {
         var selectedFile = document.getElementById('fileInput1').files[0];
         console.log(selectedFile);
-        $("#textA").fadeOut(200);
-        
-        $("#fileInputA").slideUp(400, function() {
-            $("#fileInputB").css( "display", "block" );
+        parseLocations(selectedFile, function() {
+            
+            $("#textA").fadeOut(200);
+
+            $("#fileInputA").slideUp(400, function() {
+                $("#fileInputB").css( "display", "block" );
+            });
+
         });
                
     });
@@ -157,15 +165,18 @@
         var selectedFile = document.getElementById('fileInput1').files[0];
         console.log(selectedFile);
         $("#textB").fadeOut(200);
-        
-        $("#fileInputB").slideUp(400, function() {
-            $("#fileInputC").css( "display", "block" );
-        });        
+        parseInspections(selectedFile, function() {
+            $("#fileInputB").slideUp(400, function() {
+                $("#fileInputC").css( "display", "block" );
+            });     
+        });
     });
     $("#fileInput3").change(function () {
         var selectedFile = document.getElementById('fileInput1').files[0];
         console.log(selectedFile);
-        $("#mapButton").click();
+        parseInfractions(selectedFile, function() {
+            $("#mapButton").click();
+         });
     });
         
     $(document).on('click', '#mapButton', function () {
@@ -222,6 +233,4 @@
 </body>
 
 </html>
-=======
-<html><body><h1>Hello, food!</h1></body></html>
->>>>>>> First page push
+
