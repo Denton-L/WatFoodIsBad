@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,7 +47,7 @@
 <body style="background-color: rgb(229, 227, 223); ">
 
     <!-- Navigation -->
-    <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle"><i class="fa fa-bars"></i></a>
+    <a id="menu-toggle" href="#" class="btn btn-dark btn-lg toggle" style = "display:none;"><i class="fa fa-bars"></i></a>
     <nav id="sidebar-wrapper">
         <ul class="sidebar-nav">
             <a id="menu-close" href="#" class="btn btn-light btn-lg pull-right toggle"><i class="fa fa-times"></i></a>
@@ -71,16 +72,52 @@
         </ul>
     </nav>
 
+    <div id="mapButton" style = "display:none;"></div>
     <!-- FILE INPUT -->
-    <header id="fileInput" class="header">
-        <div id = "text" class="text-vertical-center">
-            <h1>Click the button to see map</h1>
-            <h3>Free Bootstrap Themes &amp; Templates</h3>
+    <header id="fileInputA" class="header">
+        <div id = "textA" class="text-vertical-center">
+            <h1>Please enter the Facilities dataset</h1>
+            
             <br>
-            <div id="mapButton" style = "display:none;"></div>
-            <input type="file" id="fileInput1" >
+            
+            
+            <span class="btn btn-default btn-file" style="background-color:#f86363; color:white;">
+                Browse <input type="file"  id="fileInput1">
+            </span>
+        </div>
+        
+       
     </header>
     
+    <header id="fileInputB" class="header" style="display:none;">
+        <div id = "textB" class="text-vertical-center" >
+            <h1>Please enter the Inspections dataset</h1>
+            
+            <br>
+            
+            
+            <span class="btn btn-default btn-file" style="background-color:#f86363; color:white;">
+                Browse <input type="file"  id="fileInput2">
+            </span>
+        </div>
+        
+       
+    </header>
+    
+    <header id="fileInputC" class="header" style="display:none;">
+        <div id = "textC" class="text-vertical-center" >
+            <h1>Please enter the Infractions dataset</h1>
+            
+            <br>
+            
+            
+            <span class="btn btn-default btn-file" style="background-color:#f86363; color:white;">
+                Browse <input type="file"  id="fileInput3">
+            </span>
+        </div>
+        
+       
+    </header>
     
     <!-- MAP -->
     <header id="map" class="header map" style="display:none">
@@ -91,6 +128,8 @@
     
      <!-- jQuery -->
     <script src="js/jquery.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/papaparse.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
@@ -105,20 +144,50 @@
         e.preventDefault();
         $("#sidebar-wrapper").toggleClass("active");
     });
+        
+    
     
     $("#fileInput1").change(function () {
         var selectedFile = document.getElementById('fileInput1').files[0];
         console.log(selectedFile);
-        $("#mapButton").click();
+        parseLocations(selectedFile, function() {
+            
+            $("#textA").fadeOut(200);
+
+            $("#fileInputA").slideUp(400, function() {
+                $("#fileInputB").css( "display", "block" );
+            });
+
+        });
+               
+    });
+    $("#fileInput2").change(function () {
+        var selectedFile = document.getElementById('fileInput1').files[0];
+        console.log(selectedFile);
+        $("#textB").fadeOut(200);
+        parseInspections(selectedFile, function() {
+            $("#fileInputB").slideUp(400, function() {
+                $("#fileInputC").css( "display", "block" );
+            });     
+        });
+    });
+    $("#fileInput3").change(function () {
+        var selectedFile = document.getElementById('fileInput1').files[0];
+        console.log(selectedFile);
+        parseInfractions(selectedFile, function() {
+            $("#mapButton").click();
+         });
     });
         
     $(document).on('click', '#mapButton', function () {
         console.log("yolo");
-        $("#text").fadeOut(200);
+        $("#textC").fadeOut(200);
         
-        $("#fileInput").slideUp(400, function() {
+        $("#fileInputC").slideUp(400, function() {
             // Animation complete.
             $("#map").css( "display", "block" );
+            
+            $("#menu-toggle").css( "display", "block" );
             initMap();
           });        
     });
@@ -227,3 +296,4 @@
 </body>
 
 </html>
+
