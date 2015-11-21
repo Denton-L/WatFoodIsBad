@@ -161,7 +161,7 @@
                
     });
     $("#fileInput2").change(function () {
-        var selectedFile = document.getElementById('fileInput1').files[0];
+        var selectedFile = document.getElementById('fileInput2').files[0];
         console.log(selectedFile);
         $("#textB").fadeOut(200);
         parseInspections(selectedFile, function() {
@@ -171,7 +171,7 @@
         });
     });
     $("#fileInput3").change(function () {
-        var selectedFile = document.getElementById('fileInput1').files[0];
+        var selectedFile = document.getElementById('fileInput3').files[0];
         console.log(selectedFile);
         parseInfractions(selectedFile, function() {
             $("#mapButton").click();
@@ -216,11 +216,74 @@
 
     var map;
 
+    var styleArray = [
+        {
+            featureType: "all",
+            stylers: [
+                { saturation: -80 }
+            ]
+        },{
+            featureType: "road.arterial",
+            elementType: "geometry",
+            stylers: [
+                { hue: "#00ffee" },
+                { saturation: 50 }
+            ]
+        },{
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [
+                { visibility: "off" }
+            ]
+        }
+    ];
+
     function initMap () {
         map = new google.maps.Map(document.getElementById("gMap"), {
             center: {lat: 43.425, lng: -80.42},
-            zoom: 12
+            zoom: 12,
+            styles: styleArray,
+            mapTypeId: google.maps.MapTypeId.TERRAIN
         });
+
+        var overlay = new google.maps.OverlayView();
+
+        overlay.onAdd = function () {
+            var layer = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "stations");
+
+            overlay.draw = function() {
+                var projection = this.getProjection(), padding = 10;
+                var marker = layer.selectAll("svg")
+                                  .data(d3.entries(data))
+                                  .each(transform) // update existing markers
+                                  .enter().append("svg:svg")
+                                  .each(transform)
+                                  .attr("class", "marker");
+
+                // Add a circle.
+                marker.append("svg:rect")
+                      .attr("width", 10)
+                      .attr("height", 10)
+                      .attr("style", "fill: rgb(128, 128, 128)");
+
+                // Add a label.
+                marker.append("svg:text")
+                      .attr("x", padding + 7)
+                      .attr("y", padding)
+                      .attr("dy", ".31em")
+                      .text(function(d) { return d.key; });
+
+                function transform(d) {
+                    d = new google.maps.LatLng(d.value[1], d.value[0]);
+                    d = projection.fromLatLngToDivPixel(d);
+                    return d3.select(this)
+                             .style("left", (d.x - padding) + "px")
+                             .style("top", (d.y - padding) + "px");
+                }
+            }
+        }
+
+        overlay.setMap(map);
     }
     </script>
 
